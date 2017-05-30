@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 #define FRAME_HEADER_LEN 40
-#define BLOCK_HEADER_LEN 32
+#define BLOCK_HEADER_LEN 24
 
 static dissector_handle_t ffxiv_handle;
 

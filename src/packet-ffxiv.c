@@ -36,7 +36,9 @@ static void build_message_header(tvbuff_t *tvb, int offset, packet_info *pinfo, 
   eh_ptr->send_id     = tvb_get_letohl(tvb, offset+4);
   eh_ptr->recv_id     = tvb_get_letohl(tvb, offset+8);
   eh_ptr->block_type  = tvb_get_letohl(tvb, offset+16);
-  eh_ptr->timestamp   = tvb_get_letoh64(tvb, offset+24);
+  if(eh_ptr->length >= 32) {
+    eh_ptr->timestamp   = tvb_get_letoh64(tvb, offset+24);
+  }
 
   proto_tree_add_item(tree, hf_ffxiv_message_pdu_length, tvb, 0, 4, ENC_LITTLE_ENDIAN);
   proto_tree_add_item(tree, hf_ffxiv_message_pdu_send_id, tvb, 4, 4, ENC_LITTLE_ENDIAN);
@@ -44,7 +46,9 @@ static void build_message_header(tvbuff_t *tvb, int offset, packet_info *pinfo, 
 
   // This is actually little endian, but we display it as BE to make debugging easier for now
   proto_tree_add_item(tree, hf_ffxiv_message_pdu_type, tvb, 16, 4, ENC_BIG_ENDIAN);
-  proto_tree_add_item(tree, hf_ffxiv_message_pdu_timestamp, tvb, 24, 8, ENC_LITTLE_ENDIAN);
+  if(eh_ptr->length >= 32) {
+    proto_tree_add_item(tree, hf_ffxiv_message_pdu_timestamp, tvb, 24, 8, ENC_LITTLE_ENDIAN);
+  }
 }
 
 // Deal with multiple payloads in a single PDU
